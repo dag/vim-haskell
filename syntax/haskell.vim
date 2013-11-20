@@ -5,6 +5,44 @@ endif
 
 syntax case match
 
+"{{{1 Patterns
+let s:varid = haskell#Regex
+      \ ( '\l [ [:alnum:] '' ]*'
+      \ , '_ [ [:alnum:] '' ]+'
+      \ )
+let s:varsym = haskell#Regex
+      \ ( '\: @<! [ [:punct:] ]+'
+      \ )
+let s:var = haskell#Regex
+      \ ( s:varid
+      \ , '\('.s:varsym.'\)'
+      \ )
+let s:vars = haskell#Regex
+      \ ( s:var.'( \s* \, \s*'.s:var.'\s* )*'
+      \ )
+
+let s:conid = haskell#Regex
+      \ ( '\u [ [:alnum:] '' ]*'
+      \ )
+let s:consym = haskell#Regex
+      \ ( '\: [ [:punct:] ]*'
+      \ )
+let s:con = haskell#Regex
+      \ ( s:conid
+      \ , '\('.s:consym.'\)'
+      \ )
+
+let s:infix = haskell#Regex
+      \ ( '\`'.s:varid.'\`'
+      \ , '\`'.s:conid.'\`'
+      \ , s:varsym
+      \ , s:consym
+      \ )
+
+"{{{1 Operators
+execute 'syntax match haskellInfix' ''''.s:infix.''''
+highlight default link haskellInfix haskellOperator
+
 "{{{1 CPP
 syntax region haskellCPPComment contained start='\V/*' end='\V*/'
 syntax region haskellCPP matchgroup=haskellCPPSymbol start='\v^#' skip='\$' end='$' contains=haskellCPPComment
@@ -20,7 +58,7 @@ highlight default link haskellDelim haskellDelimiter
 highlight default link haskellSymbol haskellSpecial
 
 "{{{1 Type Signatures
-syntax region haskellTypeSignature matchgroup=haskellVars start='\v^\S.{-}\n=\s*\ze\:{2}' end='\n\ze\S' contains=TOP,haskellTypeSignature
+execute 'syntax region haskellTypeSignature matchgroup=haskellVars start=''\v^'.s:vars.'\n=\s*\ze\:{2}'' end=''\n\ze\S'' contains=TOP,haskellTypeSignature'
 highlight default link haskellTypeSignature haskellType
 highlight default link haskellVars haskellIdentifier
 
@@ -90,7 +128,7 @@ syntax keyword haskellImportKeyword contained safe qualified hiding
 syntax keyword haskellImportKeyword contained as nextgroup=haskellImportName skipwhite skipempty
 highlight default link haskellImportKeyword haskellKeyword
 
-syntax match haskellImportName contained '\u\k*'
+syntax match haskellImportName contained '\v\u%(\k|\.)*\k'
 highlight default link haskellImportName haskellIdentifier
 
 "{{{1 Reserved Keywords
@@ -100,8 +138,8 @@ highlight default link haskellModule haskellDefine
 syntax keyword haskellDefault default
 highlight default link haskellDefault haskellStatement
 
-syntax keyword haskellInfix infix[l] infixr
-highlight default link haskellInfix haskellStatement
+syntax keyword haskellFixity infix[l] infixr
+highlight default link haskellFixity haskellStatement
 
 syntax keyword haskellCase case of
 highlight default link haskellCase haskellConditional

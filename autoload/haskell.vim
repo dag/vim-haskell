@@ -9,3 +9,7 @@ function! haskell#Section(backwards)
     let l:lnum += a:backwards ? -1 : 1
   endwhile
 endfunction
+
+function! haskell#Regex(...)
+  return '\v('.substitute(join(a:000, '\v|'), ' ', '', 'g').'\v)'
+endfunction
