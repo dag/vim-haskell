@@ -7,8 +7,8 @@ syntax case match
 
 "{{{1 Patterns
 let s:varid = haskell#Regex
-      \ ( '\l [ [:alnum:] '' ]*'
-      \ , '_ [ [:alnum:] '' ]+'
+      \ ( '\l \k*'
+      \ , '_ \k+'
       \ )
 let s:varsym = haskell#Regex
       \ ( '\: @<! [ [:punct:] ]+'
@@ -18,11 +18,11 @@ let s:var = haskell#Regex
       \ , '\('.s:varsym.'\)'
       \ )
 let s:vars = haskell#Regex
-      \ ( s:var.'( \s* \, \s*'.s:var.'\s* )*'
+      \ ( s:var.'%( \s* \, \s*'.s:var.'\s* )*'
       \ )
 
 let s:conid = haskell#Regex
-      \ ( '\u [ [:alnum:] '' ]*'
+      \ ( '\u \k*'
       \ )
 let s:consym = haskell#Regex
       \ ( '\: [ [:punct:] ]*'

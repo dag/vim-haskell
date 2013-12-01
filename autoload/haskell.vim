@@ -11,5 +11,5 @@ function! haskell#Section(backwards)
 endfunction
 
 function! haskell#Regex(...)
-  return '\v('.substitute(join(a:000, '\v|'), ' ', '', 'g').'\v)'
+  return '\v%('.substitute(join(a:000, '\v|'), ' ', '', 'g').'\v)'
 endfunction
